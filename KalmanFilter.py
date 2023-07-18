@@ -37,7 +37,7 @@ n_samples = 100
 
 
 # Parâmetros do filtro de Kalman
-Q = 3.5e-3  # Process noise (covariance da estimativa do ruído do processo)
+Q = 3.5e-4  # Process noise (covariance da estimativa do ruído do processo)
 R = 0.5 # Measurement noise (covariance da medição)
 
 # Aplica o filtro de Kalman nos dados
