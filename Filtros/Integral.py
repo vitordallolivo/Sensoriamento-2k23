@@ -5,13 +5,13 @@ from Dados import a, dt
 
 # Função para integrar os dados usando a regra dos trapézios
 def integration_trapezoidal(data, dt):
-    integrated_data = cumtrapz(data, dx=dt, axis=0, initial=0)
+    integrated_data = cumtrapz(data)
     return integrated_data
 
 # Função para remover o drift da integral usando regressão linear
 def remove_drift_from_integral(integral_data):
     # Criar um array de tempo (assumindo que os valores são amostrados em intervalos iguais)
-    time = np.arange(len(integral_data))
+    time = np.arange(len(integral_data))*0.5
 
     # Ajustar uma reta (linha) aos dados usando a regressão linear
     coeffs = np.polyfit(time, integral_data, 1)
@@ -39,13 +39,15 @@ detrended_data = remove_drift_from_integral(integrated_data)
 window_size = 3  # Tamanho da janela do filtro de média móvel
 detrended_data = apply_moving_average(detrended_data, window_size)
 
+detrended_data=detrended_data*3.6
+
 # Output das mudanças angulares integradas para cada eixo como lista no mesmo formato de entrada
 output_list = detrended_data.tolist()
 
 print("Integral de a:")
 print(integrated_data)
 print("Integral sem linha de tendencia")
-print(detrended_data)
+print(output_list)
 
 plt.plot(output_list, label='Sem Tendencia', color='red')
 #plt.plot(integrated_data, label='Com Tendencia', color='green')
