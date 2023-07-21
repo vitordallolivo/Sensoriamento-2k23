@@ -1,11 +1,11 @@
 import math
-from Dados import gyro,accel
+from voo5_accel_gyro import gyro_data,accel_data,dt
 def complementary_filter(alpha, gyro_data, accel_data):
     # Variáveis para armazenar a estimativa do ângulo e a estimativa do bias
     angle_estimate = [[0.0], [0.0], [0.0]]  # Iniciamos com ângulos 0 para x, y, z
     gyro_bias = [0.0, 0.0, 0.0]  # Iniciamos com bias 0 para x, y, z
 
-    dt = 0.01  # Intervalo de tempo entre as amostras (exemplo: 0.01 segundos)
+    # Intervalo de tempo entre as amostras (exemplo: 0.01 segundos)
 
     # Loop para iterar sobre os dados
     for i in range(1, len(gyro_data[0])):
@@ -23,7 +23,7 @@ def complementary_filter(alpha, gyro_data, accel_data):
     return angle_estimate
 
 alpha_value = 0.9
-angle_estimate_degrees = complementary_filter(alpha_value, gyro, accel)
+angle_estimate_degrees = complementary_filter(alpha_value, gyro_data, accel_data)
 
 # Imprime os ângulos estimados para x, y, z
 print("Ângulos estimados (graus):")
