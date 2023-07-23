@@ -1,8 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from quartenions import yaw_lista
+#from quartenions import yaw_lista
+#from voo5_accel_gyro import Roll_List,Pitch_List,Yaw_List
+from Dados import a,Polyfit
 
-data = yaw_lista # tem que ser uma lista
+data = Polyfit # tem que ser uma lista
 
 # VALORES DE Q e R devem ser mudados de acordo com seu set de dados
 
@@ -37,8 +39,8 @@ n_samples = 100
 
 
 # Parâmetros do filtro de Kalman
-Q = 6.5e-2# Process noise (covariance da estimativa do ruído do processo)
-R = 1.9 # Measurement noise (covariance da medição)
+Q = 1e-2# Process noise (covariance da estimativa do ruído do processo)
+R =  0.6121# Measurement noise (covariance da medição)
 
 # Aplica o filtro de Kalman nos dados
 filtered_data = kalman_filter(data, Q, R)
@@ -54,5 +56,4 @@ plt.title('Filtro de Kalman')
 plt.grid(True)
 plt.show()
 
-print('Funcao:')
-print(filtered_data)
+print(f'Funcao={filtered_data}')

@@ -18,7 +18,7 @@ def complementary_filter(alpha, gyro_data, accel_data):
 
         # Atualizar a estimativa do ângulo usando os dados do giroscópio
         for j in range(3):
-            angle_estimate[j].append(math.degrees(math.radians(gyro_data[j][i]) - gyro_bias[j]))
+            angle_estimate[j].append(math.degrees((gyro_data[j][i]) - gyro_bias[j]))
 
     return angle_estimate
 

@@ -1,6 +1,7 @@
 import numpy as np
 import math
 from voo5_accel_gyro import gyro_data, accel_data,dt
+import matplotlib.pyplot as plt
 
 def quaternion_multiply(q1, q2):
     w1, x1, y1, z1 = q1
