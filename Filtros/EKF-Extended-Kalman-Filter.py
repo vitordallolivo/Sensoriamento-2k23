@@ -2,6 +2,7 @@ import numpy as np
 from voo5_accel_gyro import accel_data,gyro_data,dt
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
+from Dados import a,dt
 import math
 # Função de transição do estado (dinâmica do sistema)
 
@@ -28,7 +29,7 @@ covariance_estimate_y = np.eye(2)
 covariance_estimate_z = np.eye(2)
 
 # Dados de aceleração nos eixos x, y e z
-accel_data_x, accel_data_y, accel_data_z = accel_data
+accel_data_x, accel_data_y, accel_data_z = a
 
 # Loop principal do EKF para cada eixo
 estimated_velocities_x = []

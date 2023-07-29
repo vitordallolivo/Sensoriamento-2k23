@@ -84,3 +84,10 @@ for i in range(len(quaternions)):
 print('roll',roll_lista)
 print('pitch',pitch_lista)
 print('yaw',yaw_lista)
+
+plt.plot(roll_lista,label='roll')
+plt.plot(pitch_lista,label='pitch')
+plt.plot(yaw_lista,label='yaw')
+plt.grid()
+plt.legend()
+plt.show()

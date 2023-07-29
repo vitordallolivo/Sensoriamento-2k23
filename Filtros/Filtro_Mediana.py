@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from voo5_accel_gyro import accel_data,dt,gyro_data
 from statistics import median
 from Dados import a
 
@@ -13,12 +14,12 @@ def median_filter(data, window_size):
         filtered_data.append(median(window))
 
     return filtered_data
-
+''
 # Lista de entrada obtida do arquivo Dados.py
-input_data = a
+input_data = accel_data[0]
 
 # Tamanho da janela do filtro de mediana (deve ser ímpar)
-window_size = 5
+window_size = 27
 
 # Aplicar o filtro de mediana na lista de entrada
 filtered_data = median_filter(input_data, window_size)

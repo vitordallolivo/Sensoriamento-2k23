@@ -1,0 +1,133 @@
+
+Verificar precisão de satelites:
+
+
+* NAV-DOP (0x01 0x04):
+
+HEADER:0xB5 0x62
+ID:    0x01 0x04
+Length (Bytes): 18
+
+Status:
+
+	1	Ideal	Highest possible confidence level to be used for applications demanding the highest possible precision at all times.
+	1-2	Excellent	At this confidence level, positional measurements are considered accurate enough to meet all but the most sensitive applications.
+	2-5	Good	Represents a level that marks the minimum appropriate for making accurate decisions. Positional measurements could be used to make reliable in-	route navigation suggestions to the user.
+	5-10	Moderate	Positional measurements could be used for calculations, but the fix quality could still be improved. A more open view of the sky is 	recommended.
+	10-20	Fair	Represents a low confidence level. Positional measurements should be discarded or used only to indicate a very rough estimate of the current 	location.
+	>20	Poor	At this level, measurements are inaccurate by as much as 300 meters with a 6-meter accurate device (50 DOP × 6 meters) and should be discarded.
+
+Payload:
+
+| Byte Offset | Number | Format | Scaling | Name  | Unit | Description                  |
+|-------------|--------|--------|---------|-------|------|------------------------------|
+| 0           | U4     | -      | iTOW    | ms    | GPS  | Millisecond Time of Week     |
+| 4           | U2     | 0.01   | gDOP    | -     | -    | Geometric DOP                |
+| 6           | U2     | 0.01   | pDOP    | -     | -    | Position DOP                 |
+| 8           | U2     | 0.01   | tDOP    | -     | -    | Time DOP                     |
+| 10          | U2     | 0.01   | vDOP    | -     | -    | Vertical DOP                 |
+| 12          | U2     | 0.01   | hDOP    | -     | -    | Horizontal DOP               |
+| 14          | U2     | 0.01   | nDOP    | -     | -    | Northing DOP                 |
+| 16          | U2     | 0.01   | eDOP    | -     | -    | Easting DOP                  |
+
+
+Navegação:
+
+* NAV-POSLLH (0x01 0x02)
+
+HEADER: 0xB5 0x62
+ID:	0x01 0x02
+Length (Bytes): 28
+
+
+Payload:
+
+| Byte Offset | Number | Format | Scaling | Name    | Unit | Description                                |
+|-------------|--------|--------|---------|---------|------|--------------------------------------------|
+| 0           | U4     | -      | iTOW    | ms      | GPS  | Millisecond Time of Week                   |
+| 4           | I4     | 1e-7   | lon     | deg     | -    | Longitude                                  |
+| 8           | I4     | 1e-7   | lat     | deg     | -    | Latitude                                   |
+| 12          | I4     | -      | height  | mm      | -    | Height above Ellipsoid                      |
+| 16          | I4     | -      | hMSL    | mm      | -    | Height above mean sea level                 |
+| 20          | U4     | -      | hAcc    | mm      | -    | Horizontal Accuracy Estimate               |
+| 24          | U4     | -      | vAcc    | mm      | -    | Vertical Accuracy Estimate                 |
+
+
+
+* NAV-POSECEF (0x01 0x01):
+
+HEADER: 0xB5 0x62
+ID:	0x01 0x01
+Length (Bytes): 28
+
+Payload:
+
+| Byte Offset | Number Format | Scaling | Name  | Unit | Description                   |
+|-------------|--------------|---------|-------|------|--------------------------------|
+| 0           | U4           | -       | iTOW  | ms   | GPS Millisecond Time of Week   |
+| 4           | I4           | -       | ecefX | cm   | ECEF X coordinate              |
+| 8           | I4           | -       | ecefY | cm   | ECEF Y coordinate              |
+| 12          | I4           | -       | ecefZ | cm   | ECEF Z coordinate              |
+| 16          | U4           | -       | pAcc  | cm   | Position Accuracy Estimate     |
+
+
+
+*  NAV-SOL (0x01 0x06):
+
+HEADER: 0xB5 0x62
+ID:	0x01 0x06
+Length (Bytes): 52
+
+
+Payload:
+
+| Byte Offset | Number | Format | Scaling | Name    | Unit | Description                                |
+|-------------|--------|--------|---------|---------|------|--------------------------------------------|
+| 0           | U4     | -      | iTOW    | ms     | GPS  | Millisecond Time of Week                   |
+| 4           | I4     | -      | fTOW    | ns     | -    | Fractional Nanoseconds remainder of rounded |
+|             |        |        |         |         |      | ms above, range -500000 .. 500000          |
+| 8           | I2     | -      | week    | -      | -    | GPS week (GPS time)                        |
+| 10          | U1     | -      | gpsFix  | -      | -    | GPSfix Type, range 0..5                    |
+|             |        |        |         |         |      | 0x00 = No Fix                              |
+|             |        |        |         |         |      | 0x01 = Dead Reckoning only                 |
+|             |        |        |         |         |      | 0x02 = 2D-Fix                              |
+|             |        |        |         |         |      | 0x03 = 3D-Fix                              |
+|             |        |        |         |         |      | 0x04 = GPS + dead reckoning combined       |
+|             |        |        |         |         |      | 0x05 = Time only fix                       |
+|             |        |        |         |         |      | 0x06..0xff: reserved                       |
+| 11          | X1     | -      | flags   | -      | -    | Fix Status Flags (see graphic below)       |
+| 12          | I4     | -      | ecefX   | cm     | ECEF | X coordinate                               |
+| 16          | I4     | -      | ecefY   | cm     | ECEF | Y coordinate                               |
+| 20          | I4     | -      | ecefZ   | cm     | ECEF | Z coordinate                               |
+| 24          | U4     | -      | pAcc    | cm     | 3D   | Position Accuracy Estimate                 |
+| 28          | I4     | -      | ecefVX  | cm/s   | ECEF | X velocity                                 |
+| 32          | I4     | -      | ecefVY  | cm/s   | ECEF | Y velocity                                 |
+| 36          | I4     | -      | ecefVZ  | cm/s   | ECEF | Z velocity                                 |
+| 40          | U4     | -      | sAcc    | cm/s   | Speed| Speed Accuracy Estimate                    |
+| 44          | U2     | 0.01   | pDOP    | -      | -    | Position DOP                               |
+| 46          | U1     | -      | reserved1 | -     | -    | Reserved                                   |
+| 47          | U1     | -      | numSV   | -      | -    | Number of SVs used in Nav Solution         |
+| 48          | U4     | -      | reserved2 | -     | -    | Reserved                                   |
+
+
+
+Tempo:
+
+*NAV-TIMEGPS (0x01 0x20):
+
+HEADER: 0xB5 0x62
+ID:	0x01 0x20
+Length (Bytes): 16
+
+Payload:
+| Byte Offset | Number | Format | Scaling | Name    | Unit | Description                                |
+|-------------|--------|--------|---------|---------|------|--------------------------------------------|
+| 0           | U4     | -      | iTOW    | ms      | GPS  | Millisecond Time of Week                   |
+| 4           | I4     | -      | fTOW    | ns      | -    | Fractional Nanoseconds remainder of rounded |
+|             |        |        |         |         |      | ms above, range -500000 .. 500000          |
+| 8           | I2     | -      | week    | -       | -    | GPS week (GPS time)                        |
+| 10          | I1     | -      | leapS   | s       | -    | Leap Seconds (GPS-UTC)                     |
+| 11          | X1     | -      | valid   | -       | -    | Validity Flags (see graphic below)         |
+| 12          | U4     | -      | tAcc    | ns      | -    | Time Accuracy Estimate                     |
+
+

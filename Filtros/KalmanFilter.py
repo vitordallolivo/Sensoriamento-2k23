@@ -2,9 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 #from quartenions import yaw_lista
 #from voo5_accel_gyro import Roll_List,Pitch_List,Yaw_List
-from Dados import a,Polyfit
+from Dados import a
 
-data = Polyfit # tem que ser uma lista
+data = a # tem que ser uma lista
 
 # VALORES DE Q e R devem ser mudados de acordo com seu set de dados
 
