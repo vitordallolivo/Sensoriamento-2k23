@@ -1,32 +1,59 @@
 import math
-from voo5_accel_gyro import gyro_data,accel_data,dt
-def complementary_filter(alpha, gyro_data, accel_data):
-    # Variáveis para armazenar a estimativa do ângulo e a estimativa do bias
-    angle_estimate = [[0.0], [0.0], [0.0]]  # Iniciamos com ângulos 0 para x, y, z
-    gyro_bias = [0.0, 0.0, 0.0]  # Iniciamos com bias 0 para x, y, z
+from Dados import a,dt
+from scipy import integrate
+import matplotlib.pyplot as plt
+from voo5_accel_gyro import accel_data,gyro_data,dt
+from Kalman_get_Integral_Valor import output
 
-    # Intervalo de tempo entre as amostras (exemplo: 0.01 segundos)
+alpha=0.4
 
-    # Loop para iterar sobre os dados
-    for i in range(1, len(gyro_data[0])):
-        # Atualizar o bias do giroscópio usando as medidas do acelerômetro
-        angle_acc = [math.atan2(accel_data[1][i], accel_data[2][i]),  # ângulo estimado para x
-                     math.atan2(accel_data[0][i], accel_data[2][i]),  # ângulo estimado para y
-                     math.atan2(accel_data[0][i], accel_data[1][i])]  # ângulo estimado para z
-        gyro_bias = [alpha * (gyro_bias[j] + math.radians(gyro_data[j][i]) * dt) + (1 - alpha) * angle_acc[j]
-                     for j in range(3)]
 
-        # Atualizar a estimativa do ângulo usando os dados do giroscópio
-        for j in range(3):
-            angle_estimate[j].append(math.degrees((gyro_data[j][i]) - gyro_bias[j]))
+def calculate_angles(accel_data,gyro_data):
+    # Extrair as acelerações nas direções x, y e z
+    ax, ay, az = accel_data[0][0], accel_data[1][0], accel_data[2][0]
+    constante=0
+    gyro_rate_y=0
+    gyro_rate_x=0
 
-    return angle_estimate
+    pitch,roll,yaw=[],[],[]
 
-alpha_value = 0.9
-angle_estimate_degrees = complementary_filter(alpha_value, gyro_data, accel_data)
+    for i in range(len(accel_data[1])):
+        ax, ay, az = accel_data[0][i], accel_data[1][i], accel_data[2][i]
+        gx, gy, gz = gyro_data[0][i],gyro_data[1][i],gyro_data[2][i]
+        # Calcular o ângulo de pitch usando o acelerômetro
+        gyro_rate_y +=output[1][i]*dt
+        gyro_rate_x += output[0][i] * dt
+        pitch.append(alpha*(math.atan2(ay, math.sqrt(ax**2 + az**2)) * 180.0 / math.pi)+(1-alpha)*gyro_rate_y)
 
-# Imprime os ângulos estimados para x, y, z
-print("Ângulos estimados (graus):")
-print(f"x: {angle_estimate_degrees[0]}")
-print(f"y: {angle_estimate_degrees[1]}")
-print(f"z: {angle_estimate_degrees[2]}")
+        # Calcular o ângulo de roll usando o acelerômetro
+        roll.append(alpha*(math.atan2(-ax, math.sqrt(ay**2 + az**2)) * 180.0 / math.pi)+(1-alpha)*gyro_rate_x)
+
+        constante+= output[2][i]*dt
+        yaw.append(constante)
+
+    return pitch, roll, yaw
+
+# Exemplo de uso:
+pitch, roll, yaw = calculate_angles(accel_data,gyro_data)
+
+print(f'\nRoll={roll}\nPitch={pitch}\nYaw={yaw}')
+
+plt.figure(1)
+
+plt.subplot(3, 1, 1)
+plt.title('Roll')
+plt.grid()
+plt.plot(roll,label='Roll',color='blue')
+
+plt.subplot(3, 1, 2)
+plt.title('Pitch')
+plt.grid()
+plt.plot(pitch,label='Pitch',color='green')
+
+plt.subplot(3, 1, 3)
+plt.title('Yaw')
+plt.plot(yaw,label='Yaw',color='orange')
+plt.grid()
+plt.subplots_adjust(hspace=0.4)
+plt.figtext(0.5, 0.01, f'Alpha={alpha*100}%', ha='center', fontsize=12)
+plt.show()

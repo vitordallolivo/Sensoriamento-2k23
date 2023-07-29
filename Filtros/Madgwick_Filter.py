@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from voo5_accel_gyro import gyro_data,accel_data,dt
 
 def madgwick_filter(accel_data, gyro_data, dt, beta=0.1):
@@ -47,3 +48,5 @@ print("Roll_List=", roll_list)
 print("Pitch_List=", pitch_list)
 print("Yaw_List=", yaw_list)
 
+plt.plot(yaw_list)
+plt.show()
